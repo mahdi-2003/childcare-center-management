@@ -1,0 +1,15 @@
+CREATE DATABASE IF NOT EXISTS childcare_center CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE childcare_center;
+CREATE TABLE classrooms (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(80) NOT NULL UNIQUE, capacity INT NOT NULL CHECK(capacity > 0), age_group VARCHAR(60) NOT NULL);
+CREATE TABLE guardians (id INT AUTO_INCREMENT PRIMARY KEY, full_name VARCHAR(120) NOT NULL, email VARCHAR(160) NOT NULL UNIQUE, phone VARCHAR(30) NOT NULL);
+CREATE TABLE children (id INT AUTO_INCREMENT PRIMARY KEY, full_name VARCHAR(120) NOT NULL, birth_date DATE NOT NULL, classroom_id INT NOT NULL, enrolled_on DATE NOT NULL, status ENUM('active','inactive') NOT NULL DEFAULT 'active', FOREIGN KEY(classroom_id) REFERENCES classrooms(id));
+CREATE TABLE child_guardians (child_id INT NOT NULL, guardian_id INT NOT NULL, relationship VARCHAR(40) NOT NULL, PRIMARY KEY(child_id,guardian_id), FOREIGN KEY(child_id) REFERENCES children(id), FOREIGN KEY(guardian_id) REFERENCES guardians(id));
+CREATE TABLE staff (id INT AUTO_INCREMENT PRIMARY KEY, full_name VARCHAR(120) NOT NULL, email VARCHAR(160) NOT NULL UNIQUE, role VARCHAR(70) NOT NULL);
+CREATE TABLE shifts (id INT AUTO_INCREMENT PRIMARY KEY, staff_id INT NOT NULL, classroom_id INT NOT NULL, shift_date DATE NOT NULL, start_time TIME NOT NULL, end_time TIME NOT NULL, CHECK(end_time > start_time), FOREIGN KEY(staff_id) REFERENCES staff(id), FOREIGN KEY(classroom_id) REFERENCES classrooms(id));
+CREATE TABLE attendance (id INT AUTO_INCREMENT PRIMARY KEY, child_id INT NOT NULL, attendance_date DATE NOT NULL, check_in TIME NOT NULL, check_out TIME NULL, UNIQUE(child_id,attendance_date), CHECK(check_out IS NULL OR check_out >= check_in), FOREIGN KEY(child_id) REFERENCES children(id));
+CREATE TABLE invoices (id INT AUTO_INCREMENT PRIMARY KEY, child_id INT NOT NULL, due_date DATE NOT NULL, amount DECIMAL(10,2) NOT NULL CHECK(amount >= 0), description VARCHAR(255) NOT NULL, FOREIGN KEY(child_id) REFERENCES children(id));
+CREATE TABLE payments (id INT AUTO_INCREMENT PRIMARY KEY, invoice_id INT NOT NULL, paid_on DATE NOT NULL, amount DECIMAL(10,2) NOT NULL CHECK(amount > 0), FOREIGN KEY(invoice_id) REFERENCES invoices(id));
+CREATE INDEX idx_children_classroom_status ON children(classroom_id,status);
+CREATE INDEX idx_attendance_date ON attendance(attendance_date);
+CREATE INDEX idx_shifts_date ON shifts(shift_date);
+CREATE INDEX idx_invoice_due ON invoices(due_date);

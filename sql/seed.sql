@@ -1,0 +1,10 @@
+USE childcare_center;
+INSERT INTO classrooms(name,capacity,age_group) VALUES ('Sunflowers',8,'Toddlers'),('Rainbows',10,'Preschool'),('Stars',12,'Pre-K');
+INSERT INTO guardians(full_name,email,phone) VALUES ('Jordan Lee','jordan@example.test','555-0101'),('Taylor Kim','taylor@example.test','555-0102'),('Morgan Patel','morgan@example.test','555-0103');
+INSERT INTO children(full_name,birth_date,classroom_id,enrolled_on) VALUES ('Avery Lee','2022-04-12',1,'2026-09-01'),('Riley Kim','2021-08-20',2,'2026-09-01'),('Casey Patel','2020-11-05',3,'2026-09-01');
+INSERT INTO child_guardians VALUES (1,1,'Parent'),(2,2,'Parent'),(3,3,'Parent');
+INSERT INTO staff(full_name,email,role) VALUES ('Alex Rivera','alex@example.test','Lead Teacher'),('Sam Chen','sam@example.test','Assistant Teacher');
+INSERT INTO shifts(staff_id,classroom_id,shift_date,start_time,end_time) VALUES (1,1,'2026-11-04','08:00','16:00'),(2,2,'2026-11-04','09:00','17:00');
+INSERT INTO attendance(child_id,attendance_date,check_in,check_out) VALUES (1,'2026-11-04','08:15','15:45'),(2,'2026-11-04','08:30',NULL);
+INSERT INTO invoices(child_id,due_date,amount,description) VALUES (1,'2026-11-15',450,'November tuition'),(2,'2026-11-15',450,'November tuition'),(3,'2026-11-15',500,'November tuition');
+INSERT INTO payments(invoice_id,paid_on,amount) VALUES (1,'2026-11-02',200),(2,'2026-11-03',450);
